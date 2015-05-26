@@ -8,7 +8,7 @@ RUN yum -y  update
 ADD start-sv /storm/start-sv
 RUN chmod +x /storm/start-sv
 
-EVN NBID 1
+ENV NBID 1
 ENV S_PORT 6704
 ENV E_PORT 6700
 ENV ZK_NM 3
