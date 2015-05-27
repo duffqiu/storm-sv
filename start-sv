@@ -22,7 +22,7 @@ done
 echo "nimbus.host: \"nimbus-$NBID\"" >> /storm/conf/storm.yaml
 
 echo "storm.zookeeper.root: \"/storm/$NBID\"" >> /storm/conf/storm.yaml
-echo "storm.local.hostname: $STORM-HN" >> /storm/conf/storm.yaml
+echo "storm.local.hostname: $STORM_HN" >> /storm/conf/storm.yaml
 
 
 if [ -z $S_PORT ]

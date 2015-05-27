@@ -1,0 +1,24 @@
+[Unit]
+Description=Storm Supervisor in cluster 1 Presence Service
+BindsTo=storm1-sv@%i.service
+After=storm1-sv@%i.service
+
+[Service]
+Restart=always
+RestartSec=30
+EnvironmentFile=/etc/environment
+Environment="STORM_SV_PORT1=6700"
+Environment="STORM_SV_PORT2=6701"
+Environment="STORM_SV_PORT3=6702"
+Environment="STORM_SV_PORT4=6703"
+Environment="STORM_SV_PORT5=6704"
+ExecStartPre=/usr/bin/etcdctl set --ttl 60 /skydns/org/duffqiu/cluster/storm1/sv%i/1 '{"host":"${COREOS_PRIVATE_IPV4}","port":${STORM_SV_PORT1}}'
+ExecStartPre=/usr/bin/etcdctl set --ttl 60 /skydns/org/duffqiu/cluster/storm1/sv%i/2 '{"host":"${COREOS_PRIVATE_IPV4}","port":${STORM_SV_PORT2}}'
+ExecStartPre=/usr/bin/etcdctl set --ttl 60 /skydns/org/duffqiu/cluster/storm1/sv%i/3 '{"host":"${COREOS_PRIVATE_IPV4}","port":${STORM_SV_PORT3}}'
+ExecStartPre=/usr/bin/etcdctl set --ttl 60 /skydns/org/duffqiu/cluster/storm1/sv%i/4 '{"host":"${COREOS_PRIVATE_IPV4}","port":${STORM_SV_PORT4}}'
+ExecStartPre=/usr/bin/etcdctl set --ttl 60 /skydns/org/duffqiu/cluster/storm1/sv%i/5 '{"host":"${COREOS_PRIVATE_IPV4}","port":${STORM_SV_PORT5}}'
+ExecStart=/usr/bin/echo "Set storm storm1sv-%i in skydns2"
+
+[X-Fleet]
+MachineOf=storm1-sv@%i.service
+MachineMetadata=role=back

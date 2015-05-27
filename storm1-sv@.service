@@ -1,0 +1,32 @@
+[Unit]
+Description=Storm Supervisior in cluster 1 service unit
+After=docker.service
+Wants=storm1sv-presence@%i.service
+
+[Service]
+Restart=always
+RestartSec=15
+TimeoutSec=120
+EnvironmentFile=/etc/environment
+Environment="DOMAIN_NAME=cluster.duffqiu.org"
+ExecStartPre=-/usr/bin/docker kill storm1sv-%i
+ExecStartPre=-/usr/bin/docker rm  storm1sv-%i
+ExecStartPre=-/usr/bin/docker pull duffqiu/storm-sv:latest
+ExecStart=/usr/bin/docker run  \
+                              --name storm1sv-%i \
+                              -e ZK_NM=3 \
+                              -e STORM_HN=${COREOS_PRIVATE_IPV4} \
+                              -e NBID=1 \
+                              -e S_PORT=6704 \
+                              -e E_PORT=6700 \
+                              --hostname storm1sv-%i.${DOMAIN_NAME} \
+                              --dns-search ${DOMAIN_NAME} \
+                              --dns ${COREOS_PRIVATE_IPV4} \
+                              -p ${COREOS_PRIVATE_IPV4}:6700-6704:6700-6704 \
+                              -v /mirror/storm1/sv/logs:/storm/logs \
+                              duffqiu/storm-sv:latest
+ExecStop=-/usr/bin/docker stop storm1sv-%i
+
+[X-Fleet]
+X-Conflicts=storm1-sv@*.service
+MachineMetadata=role=back
