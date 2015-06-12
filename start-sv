@@ -53,6 +53,8 @@ until [ $S_PORT -lt $E_PORT ]; do
   let S_PORT-=1
 done
 
+echo "worker.childopts: \"-Xmx256m\"" >> /storm/conf/storm.yaml
+
 echo "Finish storm configuration."
 echo "[Config] The supervisor configuration yaml content:-------------------"
 cat /storm/conf/storm.yaml
